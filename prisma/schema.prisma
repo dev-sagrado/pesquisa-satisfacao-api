@@ -7,59 +7,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Formulario {
   id          Int        @id @default(autoincrement())
   titulo      String
-  dataCriacao DateTime   @default(now())
-  perguntas   Pergunta[] // One-to-many relation with Pergunta
-  respostas   Resposta[] // One-to-many relation with Resposta
+  dataCriacao DateTime    @default(now())
+  perguntas   Pergunta[]  // One-to-many relation with Pergunta
+  respostas   Resposta[]  // One-to-many relation with Resposta
 }
 
 model Pergunta {
-  id           Int          @id @default(autoincrement())
-  tipo         TipoPergunta
-  texto        String
-  formularioId Int // Foreign key to Formulario
-  formulario   Formulario   @relation(fields: [formularioId], references: [id])
-  respostas    Resposta[] // One-to-many relation with Resposta
-  opcoes       Opcao[] // One-to-many relation with Opcao
-}
-
-model Opcao {
-  id         Int      @id @default(autoincrement())
+  id         Int         @id @default(autoincrement())
+  tipo       TipoPergunta
   texto      String
-  perguntaId Int // Foreign key to Pergunta
-  pergunta   Pergunta @relation(fields: [perguntaId], references: [id])
+  formularioId Int       // Foreign key to Formulario
+  formulario Formulario  @relation(fields: [formularioId], references: [id])
+  respostas  Resposta[]  // One-to-many relation with Resposta
 }
 
 model Resposta {
-  id           Int      @id @default(autoincrement())
-  resposta     String
-  dataResposta DateTime @default(now())
-  alunoId      Int // Foreign key to Aluno
-  aluno        Aluno    @relation(fields: [alunoId], references: [id])
-  perguntaId   Int // Foreign key to Pergunta
-  pergunta     Pergunta @relation(fields: [perguntaId], references: [id])
-
-  formularioId Int // Foreign key to Formulario
-  formulario   Formulario @relation(fields: [formularioId], references: [id])
+  id          Int         @id @default(autoincrement())
+  resposta    String
+  dataResposta DateTime   @default(now())
+  perguntaId  Int         // Foreign key to Pergunta
+  pergunta    Pergunta    @relation(fields: [perguntaId], references: [id])
+  
+  formularioId Int        // Foreign key to Formulario
+  formulario  Formulario  @relation(fields: [formularioId], references: [id])
 }
 
-model Aluno {
-  id            Int        @id @default(autoincrement())
-  dataRespostas DateTime   @default(now())
-  respostas     Resposta[] // One-to-many relation with Resposta
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  isAdmin   Boolean  @default(false)
 }
 
 enum TipoPergunta {
   SIM_NAO
   MULTIPLA_ESCOLHA
   DISCURSIVA
-}
-
-enum TipoGrafico {
-  BARRA
-  PIZZA
-  LINHA
 }

@@ -1,23 +1,33 @@
-const respostaService = require('../services/resposta.service');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
-// Controller to register a response for a Pergunta
-exports.registrarResposta = async (req, res) => {
-  const { alunoId, perguntaId, resposta } = req.body;
-  try {
-    const novaResposta = await respostaService.registrarResposta(alunoId, perguntaId, resposta);
-    res.status(201).json(novaResposta);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to register resposta' });
-  }
-};
+// Service to register a response from an anonymous user
+async function registrarResposta(perguntaId, respostaTexto) {
+  const resposta = await prisma.resposta.create({
+    data: {
+      resposta: respostaTexto,
+      pergunta: {
+        connect: { id: parseInt(perguntaId) },
+      }
+    }
+  });
+  return resposta;
+}
 
-// Controller to get all responses for a specific Formulario
-exports.getRespostasByFormulario = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const respostas = await respostaService.getRespostasByFormulario(id);
-    res.status(200).json(respostas);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to get respostas' });
-  }
+// Service to get all responses by a Formulario ID
+async function getRespostasByFormulario(formularioId) {
+  const respostas = await prisma.resposta.findMany({
+    where: {
+      formularioId: parseInt(formularioId)
+    },
+    include: {
+      pergunta: true
+    }
+  });
+  return respostas;
+}
+
+module.exports = {
+  registrarResposta,
+  getRespostasByFormulario
 };
