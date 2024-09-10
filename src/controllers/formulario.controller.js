@@ -1,22 +1,20 @@
-
 const formularioService = require('../services/formulario.service');
 
 // Controller to create a new Formulario
 exports.criarFormulario = async (req, res) => {
+  const { titulo, perguntas } = req.body;
 
-    const { titulo, perguntas } = req.body;
+  if (!Array.isArray(perguntas)) {
+    return res.status(400).json({ error: "Perguntas deve ser um array" });
+  }
 
-    if (!Array.isArray(perguntas)) {
-      return res.status(400).json({ error: "Perguntas deve ser um array" });
-    }
-  
-    try {
-      const formulario = await formularioService.criarFormulario(titulo, perguntas);
-      res.status(201).json(formulario);
-    } catch (error) {
-      console.error(error)
-      res.status(500).json({ error: `Failed to create formulario: ${error}` });
-    }
+  try {
+    const formulario = await formularioService.criarFormulario(titulo, perguntas);
+    res.status(201).json(formulario);
+  } catch (error) {
+    console.error("Error creating Formulario:", error);
+    res.status(500).json({ error: 'Failed to create formulario' });
+  }
 };
 
 // Controller to get all Formularios
@@ -48,6 +46,7 @@ exports.getFormularioById = async (req, res) => {
 exports.adicionarPergunta = async (req, res) => {
   const { id } = req.params;
   const { tipo, texto, opcoes } = req.body;
+
   try {
     const formulario = await formularioService.adicionarPergunta(id, { tipo, texto, opcoes });
     res.status(200).json(formulario);

@@ -10,29 +10,24 @@ datasource db {
 model Formulario {
   id          Int        @id @default(autoincrement())
   titulo      String
-  dataCriacao DateTime    @default(now())
-  perguntas   Pergunta[]  // One-to-many relation with Pergunta
-  respostas   Resposta[]  // One-to-many relation with Resposta
+  dataCriacao DateTime   @default(now())
+  perguntas   Pergunta[] // One-to-many relation with Pergunta
 }
 
 model Pergunta {
-  id         Int         @id @default(autoincrement())
-  tipo       TipoPergunta
-  texto      String
-  formularioId Int       // Foreign key to Formulario
-  formulario Formulario  @relation(fields: [formularioId], references: [id])
-  respostas  Resposta[]  // One-to-many relation with Resposta
+  id          Int         @id @default(autoincrement())
+  tipo        TipoPergunta
+  texto       String
+  formulario  Formulario   @relation(fields: [formularioId], references: [id])
+  formularioId Int
+  opcoes      Opcao[]      // One-to-many relation with Opcao
 }
 
-model Resposta {
-  id          Int         @id @default(autoincrement())
-  resposta    String
-  dataResposta DateTime   @default(now())
-  perguntaId  Int         // Foreign key to Pergunta
-  pergunta    Pergunta    @relation(fields: [perguntaId], references: [id])
-  
-  formularioId Int        // Foreign key to Formulario
-  formulario  Formulario  @relation(fields: [formularioId], references: [id])
+model Opcao {
+  id         Int        @id @default(autoincrement())
+  texto      String     // Text for the option
+  pergunta   Pergunta   @relation(fields: [perguntaId], references: [id])
+  perguntaId Int        // Foreign key to Pergunta
 }
 
 model User {

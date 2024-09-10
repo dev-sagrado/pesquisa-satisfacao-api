@@ -3,8 +3,6 @@ const prisma = new PrismaClient();
 
 // Service to create a new Formulario
 async function criarFormulario(titulo, perguntas) {
-  console.log(perguntas)
-
   const formulario = await prisma.formulario.create({
     data: {
       titulo: titulo,
@@ -12,7 +10,17 @@ async function criarFormulario(titulo, perguntas) {
         create: perguntas.map(pergunta => ({
           tipo: pergunta.tipo,
           texto: pergunta.texto,
+          opcoes: {
+            create: pergunta.opcoes.map(opcao => ({
+              texto: opcao
+            }))
+          }
         }))
+      }
+    },
+    include: {
+      perguntas: {
+        include: { opcoes: true }
       }
     }
   });
@@ -22,7 +30,11 @@ async function criarFormulario(titulo, perguntas) {
 // Service to get all Formularios
 async function getFormularios() {
   const formularios = await prisma.formulario.findMany({
-    include: { perguntas: true, respostas: true }
+    include: {
+      perguntas: {
+        include: { opcoes: true }
+      }
+    }
   });
   return formularios;
 }
@@ -31,7 +43,11 @@ async function getFormularios() {
 async function getFormularioById(id) {
   const formulario = await prisma.formulario.findUnique({
     where: { id: parseInt(id) },
-    include: { perguntas: true, respostas: true }
+    include: {
+      perguntas: {
+        include: { opcoes: true }
+      }
+    }
   });
   return formulario;
 }
@@ -45,8 +61,17 @@ async function adicionarPergunta(formularioId, pergunta) {
         create: {
           tipo: pergunta.tipo,
           texto: pergunta.texto,
-          opcoes: pergunta.opcoes || []
+          opcoes: {
+            create: pergunta.opcoes.map(opcao => ({
+              texto: opcao
+            }))
+          }
         }
+      }
+    },
+    include: {
+      perguntas: {
+        include: { opcoes: true }
       }
     }
   });
