@@ -1,68 +1,68 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 
-// Service to create a new Formulario
-async function criarFormulario(titulo, perguntas) {
-  const formulario = await prisma.formulario.create({
-    data: {
-      titulo: titulo,
-      perguntas: {
-        create: perguntas.map(pergunta => ({
-          tipo: pergunta.tipo,
-          texto: pergunta.texto,
-          opcoes: pergunta.opcoes || []
-        }))
-      }
+const formularioService = require('../services/formulario.service');
+
+// Controller to create a new Formulario
+exports.criarFormulario = async (req, res) => {
+
+    const { titulo, perguntas } = req.body;
+
+    if (!Array.isArray(perguntas)) {
+      return res.status(400).json({ error: "Perguntas deve ser um array" });
     }
-  });
-  return formulario;
-}
-
-// Service to get all Formularios
-async function getFormularios() {
-  const formularios = await prisma.formulario.findMany({
-    include: { perguntas: true, respostas: true }
-  });
-  return formularios;
-}
-
-// Service to get a specific Formulario by ID
-async function getFormularioById(id) {
-  const formulario = await prisma.formulario.findUnique({
-    where: { id: parseInt(id) },
-    include: { perguntas: true, respostas: true }
-  });
-  return formulario;
-}
-
-// Service to add a Pergunta to a Formulario
-async function adicionarPergunta(formularioId, pergunta) {
-  const formulario = await prisma.formulario.update({
-    where: { id: parseInt(formularioId) },
-    data: {
-      perguntas: {
-        create: {
-          tipo: pergunta.tipo,
-          texto: pergunta.texto,
-          opcoes: pergunta.opcoes || []
-        }
-      }
+  
+    try {
+      const formulario = await formularioService.criarFormulario(titulo, perguntas);
+      res.status(201).json(formulario);
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ error: `Failed to create formulario: ${error}` });
     }
-  });
-  return formulario;
-}
+};
 
-// Service to remove a Pergunta from a Formulario
-async function removerPergunta(perguntaId) {
-  await prisma.pergunta.delete({
-    where: { id: parseInt(perguntaId) }
-  });
-}
+// Controller to get all Formularios
+exports.getFormularios = async (req, res) => {
+  try {
+    const formularios = await formularioService.getFormularios();
+    res.status(200).json(formularios);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get formularios' });
+  }
+};
 
-module.exports = {
-  criarFormulario,
-  getFormularios,
-  getFormularioById,
-  adicionarPergunta,
-  removerPergunta
+// Controller to get a specific Formulario by ID
+exports.getFormularioById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const formulario = await formularioService.getFormularioById(id);
+    if (!formulario) {
+      res.status(404).json({ error: 'Formulario not found' });
+    } else {
+      res.status(200).json(formulario);
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get formulario' });
+  }
+};
+
+// Controller to add a Pergunta to a Formulario
+exports.adicionarPergunta = async (req, res) => {
+  const { id } = req.params;
+  const { tipo, texto, opcoes } = req.body;
+  try {
+    const formulario = await formularioService.adicionarPergunta(id, { tipo, texto, opcoes });
+    res.status(200).json(formulario);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to add pergunta' });
+  }
+};
+
+// Controller to remove a Pergunta from a Formulario
+exports.removerPergunta = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await formularioService.removerPergunta(id);
+    res.status(200).json({ message: 'Pergunta removed successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to remove pergunta' });
+  }
 };
