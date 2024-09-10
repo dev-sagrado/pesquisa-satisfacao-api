@@ -2,6 +2,7 @@
 # Pesquisa Satisfação API
 
 ### Descrição
+
 Este é um projeto Node.js utilizando Prisma ORM, Express e MySQL. Ele gerencia formulários, perguntas e respostas. O Prisma é usado para conectar-se ao banco de dados MySQL e fornecer migrações e gerenciamento de dados, enquanto o Express lida com as requisições HTTP.
 
 ## Índice
@@ -12,8 +13,7 @@ Este é um projeto Node.js utilizando Prisma ORM, Express e MySQL. Ele gerencia 
 4. [Comandos Úteis](#comandos-úteis)
 5. [Executando o Projeto](#executando-o-projeto)
 6. [Estrutura do Projeto](#estrutura-do-projeto)
-7. [Rotas da API](#rotas-da-api)
-8. [Ferramentas e Tecnologias](#ferramentas-e-tecnologias)
+7. [Ferramentas e Tecnologias](#ferramentas-e-tecnologias)
 
 ---
 
@@ -35,7 +35,7 @@ Siga estas etapas para configurar o projeto localmente:
 1. Clone o repositório:
 
     ```bash
-    git clone https://github.com/seu-usuario/pesquisa-satisfacao-api.git
+    git clone https://github.com/dev-sagrado/pesquisa-satisfacao-api.git
     cd pesquisa-satisfacao-api
     ```
 
@@ -84,58 +84,75 @@ Siga estas etapas para configurar o projeto localmente:
 Aqui estão alguns comandos importantes que você pode usar no projeto:
 
 - **Iniciar o servidor de desenvolvimento**:
+
     ```bash
     npm run dev
     ```
+
     Inicia o servidor com **nodemon** e monitora mudanças nos arquivos.
 
 - **Iniciar o servidor em produção**:
+
     ```bash
     npm start
     ```
+
     Inicia o servidor sem monitoração automática de mudanças.
 
 - **Gerar o cliente Prisma**:
+
     ```bash
     npm run prisma:generate
     ```
+
     Gera o cliente Prisma com base no schema.
 
 - **Criar uma nova migração**:
+
     ```bash
     npm run prisma:migrate
     ```
+
     Cria uma nova migração e aplica as mudanças no banco de dados.
 
 - **Rodar Prisma Studio**:
+
     ```bash
     npm run prisma:studio
     ```
+
     Abre a interface gráfica Prisma Studio para visualização e manipulação de dados.
 
 - **Rodar ESLint**:
+
     ```bash
     npm run lint
     ```
+
     Analisa o código para garantir que segue as boas práticas.
 
 - **Formatar o código com Prettier**:
+
     ```bash
     npm run format
     ```
+
     Aplica formatação ao código de acordo com as regras definidas no Prettier.
 
 - **Verificar vulnerabilidades**:
+
     ```bash
     npm audit
     ```
 
 - **Corrigir vulnerabilidades**:
+
     ```bash
     npm audit fix
     ```
 
 - **Limpar cache do npm**:
+
     ```bash
     npm run clean
     ```
@@ -185,56 +202,6 @@ pesquisa-satisfacao-api/
 
 ---
 
-## Rotas da API
-
-### Formulários (Formularios)
-
-- **Criar um novo formulário**:
-    - `POST /api/formularios`
-    - Exemplo de payload:
-        ```json
-        {
-          "titulo": "Pesquisa de Satisfação",
-          "perguntas": [
-            {
-              "tipo": "MULTIPLA_ESCOLHA",
-              "texto": "Qual a sua opinião sobre o serviço?",
-              "opcoes": ["Ótimo", "Bom", "Regular", "Ruim"]
-            }
-          ]
-        }
-        ```
-
-- **Obter todos os formulários**:
-    - `GET /api/formularios`
-
-- **Obter um formulário específico por ID**:
-    - `GET /api/formularios/:id`
-
-- **Adicionar uma pergunta a um formulário**:
-    - `POST /api/formularios/:id/perguntas`
-
-- **Remover uma pergunta de um formulário**:
-    - `DELETE /api/perguntas/:id`
-
-### Respostas (Respostas)
-
-- **Registrar uma resposta para uma pergunta**:
-    - `POST /api/respostas`
-    - Exemplo de payload:
-        ```json
-        {
-          "alunoId": 1,
-          "perguntaId": 1,
-          "resposta": "Ótimo"
-        }
-        ```
-
-- **Obter todas as respostas de um formulário**:
-    - `GET /api/formularios/:id/respostas`
-
----
-
 ## Ferramentas e Tecnologias
 
 Este projeto utiliza as seguintes ferramentas e tecnologias:
@@ -261,4 +228,3 @@ Se você tiver alguma dúvida, sinta-se à vontade para entrar em contato.
 ## Licença
 
 Este projeto é distribuído sob a licença **MIT**. Veja mais detalhes no arquivo [LICENSE](LICENSE).
-

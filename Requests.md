@@ -23,7 +23,7 @@ Esta documentação descreve todos os endpoints disponíveis na API de Pesquisa 
 ### Criar um novo formulário
 
 - **Endpoint**: `POST /api/formularios`
-- **Descrição**: Cria um novo formulário com perguntas associadas.
+- **Descrição**: Cria um novo formulário com perguntas e opções associadas.
 - **Exemplo de Requisição**:
 
 ```bash
@@ -68,14 +68,14 @@ curl -X GET http://localhost:3000/api/formularios/1
 ### Adicionar uma pergunta a um formulário
 
 - **Endpoint**: `POST /api/formularios/:id/perguntas`
-- **Descrição**: Adiciona uma nova pergunta a um formulário existente.
+- **Descrição**: Adiciona uma nova pergunta a um formulário existente, com opções de resposta.
 - **Exemplo de Requisição**:
 
 ```bash
 curl -X POST http://localhost:3000/api/formularios/1/perguntas -H "Content-Type: application/json" -d '{
-    "tipo": "DISCURSIVA",
-    "texto": "Por favor, descreva sua experiência.",
-    "opcoes": []
+    "tipo": "MULTIPLA_ESCOLHA",
+    "texto": "Quais os benefícios que você mais valoriza?",
+    "opcoes": ["Qualidade", "Preço", "Atendimento"]
 }'
 ```
 
@@ -103,7 +103,6 @@ curl -X DELETE http://localhost:3000/api/perguntas/1
 
 ```bash
 curl -X POST http://localhost:3000/api/respostas -H "Content-Type: application/json" -d '{
-    "alunoId": 1,
     "perguntaId": 1,
     "resposta": "Ótimo"
 }'
@@ -124,3 +123,4 @@ curl -X GET http://localhost:3000/api/formularios/1/respostas
 ---
 
 Isso conclui a documentação dos endpoints da API. Utilize o **Postman**, **Insomnia** ou o **cURL** para testar as requisições.
+
