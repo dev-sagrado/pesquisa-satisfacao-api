@@ -1,0 +1,29 @@
+{ 
+    "name": "my-prisma-project", 
+    "version": "1.0.0", 
+    "main": "src/server.js", 
+    "scripts": { 
+        "dev": "nodemon src/server.js", 
+        "start": "node src/server.js",
+        "prisma:generate": "prisma generate",
+        "prisma:migrate": "prisma migrate dev --name init",
+        "prisma:migrate:deploy": "prisma migrate deploy",
+        "prisma:migrate:status": "prisma migrate status",
+        "prisma:studio": "prisma studio",
+        "test": "echo \"No test specified\" && exit 1",
+        "lint": "eslint . --ext .js",
+        "format": "prettier --write .",
+        "audit": "npm audit",
+        "audit:fix": "npm audit fix",
+        "clean": "npm cache clean --force"
+    }, 
+    "dependencies": { 
+        "express": "^4.17.1", 
+        "prisma": "^4.0.0", 
+        "dotenv": "^10.0.0", 
+        "@prisma/client": "^4.0.0" 
+    }, 
+    "devDependencies": { 
+        "nodemon": "^2.0.7" 
+    } 
+} 
